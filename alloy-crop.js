@@ -102,17 +102,23 @@
                     }
 
                     self.initScale = self.img.scaleX;
-                    
+                    self.initCr = self.img.getBoundingClientRect();
                 },
                 pinch: function (evt) {
                     
-                    var cr = self.img.getBoundingClientRect();
+                    var boxOffX = (document.documentElement.clientWidth - self.width) / 2;
                     var boxOffY = (document.documentElement.clientHeight - self.height)/2;
                     
                     var tempo = evt.zoom;
-                    var dw = (cr.width * tempo - cr.width)/2;
-                    var dh = (cr.height - cr.height * tempo)/2;
-                    if( (self.initScale * tempo <= 1.6 ) && (self.initScale * tempo >= self.originScale) && (dw >= cr.left) && (-dw <= (cr.right - self.width) ) && (dh <= (boxOffY - cr.top) ) && (dh <= (cr.bottom-boxOffY-self.height)) ){
+                    var dw = (self.initCr.width * tempo - self.initCr.width) / 2;
+                    var dh = (self.initCr.height - self.initCr.height * tempo) / 2;
+                    if (
+                        (self.initScale * tempo <= 10) && 
+                        (self.initCr.left - dw <= boxOffX) && 
+                        (self.initCr.right + dw >= self.width + boxOffX) && 
+                        (self.initCr.top + dh <= boxOffY) && 
+                        (self.initCr.bottom - dh >= self.height + boxOffY)
+                        ) {
                         self.img.scaleX = self.img.scaleY = self.initScale * tempo;
                     }
                 },
